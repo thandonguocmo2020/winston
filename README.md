@@ -203,12 +203,13 @@ logger.remove(infoFile);
 ```
 
 ## Profiling
-In addition to logging messages and metadata, winston also has a simple profiling mechanism implemented for any logger:
+
+Ngoài thông điệp logging và siêu dữ liệu, winston cũng có một cơ chế đơn giản hồ sơ thực hiện đối với bất kỳ logger name :
 
 ``` js
-  //
-  // Start profile of 'test'
-  // Remark: Consider using Date.now() with async operations
+  // ví dụ với một hồ sơ profile của test name 
+  // chạy  profile của config có name 'test'
+  //  Ghi chú: Xem xét sử dụng Date.now () với các hoạt động bất đồng bộ async
   //
   winston.profile('test');
 
@@ -221,12 +222,14 @@ In addition to logging messages and metadata, winston also has a simple profilin
   }, 1000);
 ```
 
-All profile messages are set to 'info' level by default and both message and metadata are optional. There are no plans in the Roadmap to make this configurable, but I'm open to suggestions / issues.
+
+Tất cả các tin nhắn của info level thực hiện bởi default và các tin nhắn thiết lập cùng metadata thiết lập.Điều này không giống như một kế hoặc từ bản đồ trong config cấu hình nhưng tôi có thể mở ra một gợi ý suggestions / issues.
 
 ### String interpolation
-The `log` method provides the same string interpolation methods like [`util.format`][10].
+Các chuỗi tin nhắn có thể được kết hợp từ method `log` giống như  [`util.format`][10].
 
-This allows for the following log messages.
+Điều này cso thể áp dụng cho tất cả các tin nhắn log
+
 ``` js
 logger.log('info', 'test message %s', 'my string');
 // info: test message my string
@@ -262,8 +265,9 @@ logger.log('info', 'test message', 'first', 'second', {number: 123}, function(){
 
 
 ## Querying Logs
-Winston supports querying of logs with Loggly-like options. [See Loggly Search API](https://www.loggly.com/docs/api-retrieving-data/).
-Specifically: `File`, `Couchdb`, `Redis`, `Loggly`, `Nssocket`, and `Http`.
+
+Winston hỗ trợ query của các log với giống như giống với.  [See Loggly Search API](https://www.loggly.com/docs/api-retrieving-data/).
+ Cụ thể: : `File`, `Couchdb`, `Redis`, `Loggly`, `Nssocket`, and `Http`.
 
 ``` js
   var options = {
@@ -276,7 +280,7 @@ Specifically: `File`, `Couchdb`, `Redis`, `Loggly`, `Nssocket`, and `Http`.
   };
 
   //
-  // Find items logged between today and yesterday.
+  // Tìm kiếm các item lỗi từ hôm này đến hôm qua.
   //
   winston.query(options, function (err, results) {
     if (err) {
@@ -288,7 +292,8 @@ Specifically: `File`, `Couchdb`, `Redis`, `Loggly`, `Nssocket`, and `Http`.
 ```
 
 ## Streaming Logs
-Streaming allows you to stream your logs back from your chosen transport.
+
+Cho phép bạn hiển thị các logger từ trong hình thức lưu trữ logger của bạn. Như file hiển thị ra console.
 
 ``` js
   //
@@ -303,19 +308,22 @@ Streaming allows you to stream your logs back from your chosen transport.
 
 ### Handling Uncaught Exceptions with winston
 
-With `winston`, it is possible to catch and log `uncaughtException` events from your process. There are two distinct ways of enabling this functionality either through the default winston logger or your own logger instance.
+Với `winston`, nó là có thể bắt catch và loggẻ ko xác định `uncaughtException` event từ tiến trình của bạn.
 
-If you want to use this feature with the default logger, simply call `.handleExceptions()` with a transport instance.
+. Có hai cách riêng biệt của phép chức năng này, hoặc thông qua các mặc định winston logger hoặc dụ logger của cấu hình riêng bạn.
+
+
+Nếu bạn muốn sử dụng tính năng này với các logger mặc định, Đơn giản gọi `.handleExceptions()` với một trường hợp cụ thể thì :
 
 ``` js
   //
-  // You can add a separate exception logger by passing it to `.handleExceptions`
+  //Bạn có thể thêm một logger ngoại lệ riêng biệt bằng cách đi qua đối số `.handleExceptions`
   //
   winston.handleExceptions(new winston.transports.File({ filename: 'path/to/exceptions.log' }))
 
   //
-  // Alternatively you can set `.handleExceptions` to true when adding transports to winston.
-  // You can use the `.humanReadableUnhandledException` option to get more readable exceptions.
+  // Như một sự lựa chọn bạn có thể để true  `.handleExceptions` khi nạp thêm hình thức lưu trữ đến winston.
+  //Bạn có thể sử dụng các  `.humanReadableUnhandledException`tùy chọn để có được ngoại lệ dễ đọc hơn.
   //
   winston.add(winston.transports.File, {
     filename: 'path/to/all-logs.log',
@@ -324,14 +332,16 @@ If you want to use this feature with the default logger, simply call `.handleExc
   });
 
   //
-  // Exceptions can also be handled by multiple transports.
+  // Trường hợp ngoại lệ cũng có thể được xử lý bởi nhiều hình thức .
   //
   winston.handleExceptions([ transport1, transport2, ... ]);
 ```
 
 ### To Exit or Not to Exit
 
-By default, winston will exit after logging an uncaughtException. If this is not the behavior you want,
+
+Theo mặc định, winston sẽ thoát sau khi đăng một uncaughtException. Nếu đây không phải là hành vi mà bạn muốn, 
+
 set `exitOnError = false`
 
 ``` js
@@ -343,7 +353,8 @@ set `exitOnError = false`
   logger.exitOnError = false;
 ```
 
-When working with custom logger instances, you can pass in separate transports to the `exceptionHandlers` property or set `.handleExceptions` on any transport.
+
+Khi làm việc với các trường hợp tùy chỉnh logger bạn có thể vượt qua`exceptionHandlers` propertyhoặc set `.handleExceptions` trong tất cả các hình thức  transport.
 
 Example 1
 
@@ -372,7 +383,7 @@ var logger = new winston.Logger({
 });
 ```
 
-The `exitOnError` option can also be a function to prevent exit on only certain types of errors:
+The `exitOnError` tùy chọn cũng có thể là một chức năng để ngăn chặn lối ra chỉ một số errors:
 
 ``` js
   function ignoreEpipe(err) {
@@ -382,29 +393,34 @@ The `exitOnError` option can also be a function to prevent exit on only certain 
   var logger = new (winston.Logger)({ exitOnError: ignoreEpipe });
 
   //
-  // or, like this:
+  // hoạc giống như điều này :
   //
   logger.exitOnError = ignoreEpipe;
 ```
 
 ## Logging Levels
 
-Each `level` is given a specific integer priority. The higher the priority the more important the message is considered to be, and the lower the corresponding integer priority.  For example, `npm` logging levels are prioritized from 0 to 5 (highest to lowest):
+Mỗi `Levels` đại diện một loại thông báo và thứ tự nó cao hơn tức quan trọng hơn.
+
 
 ``` js
 { error: 0, warn: 1, info: 2, verbose: 3, debug: 4, silly: 5 }
 ```
 
-Similarly, as specified exactly in RFC5424 the `syslog` levels are prioritized from 0 to 7 (highest to lowest).
+Tương tự như vậy, theo quy định chính xác trong RFC5424 `cái mức syslog` được ưu tiên 0-7 (cao nhất đến thấp nhất).
+
 
 ```js
 { emerg: 0, alert: 1, crit: 2, error: 3, warning: 4, notice: 5, info: 6, debug: 7 }
 ```
 
+
+Nếu bạn không xác định một cách rõ ràng các cấp rằng `winston` nên sử dụng` mức npm` trên sẽ được sử dụng.
+
 If you do not explicitly define the levels that `winston` should use the `npm` levels above will be used.
 
 ### Using Logging Levels
-Setting the level for your logging message can be accomplished in one of two ways. You can pass a string representing the logging level to the log() method or use the level specified methods defined on every winston Logger.
+Thiết lập mức độ cho tin nhắn đăng nhập của bạn có thể được thực hiện theo một trong hai cách.Bạn có thể vượt qua như một chuỗi với  phương pháp log ("name") hoặc sử dụng các phương pháp xác định mức độ xác định trên mỗi winston Logger.
 
 ``` js
   //
@@ -427,7 +443,7 @@ Setting the level for your logging message can be accomplished in one of two way
   winston.info("127.0.0.1 - there's no place like home");
 ```
 
-`winston` allows you to define a `level` property on each transport which specifies the **maximum** level of messages that a transport should log. For example, using the `npm` levels you could log only `error` messages to the console and everything `info` and below to a file (which includes `error` messages):
+`winston` áp dụng một định nghĩa `level` thuộ tính trong mỗi hình thức với các  **maximum** mức độ của thông điệp mà một vận tải phải logger. For example, bằng cách sử dụng `npm` levels  bạn có thể chỉ cần log `error` nhắn cho giao diện điều khiển console và tất cả mọi thứ `info` and và dưới đây là một file cấu hình ví dụ (which includes `error` messages):
 
 ``` js
   var logger = new (winston.Logger)({
@@ -441,7 +457,7 @@ Setting the level for your logging message can be accomplished in one of two way
   });
 ```
 
-You may also dynamically change the log level of a transport:
+Bạn cũng có thể tự động thay đổi level  ghi của một hình thức truyền tải sử dụng :
 
 ``` js
   var logger = new (winston.Logger)({
@@ -450,23 +466,22 @@ You may also dynamically change the log level of a transport:
       new (winston.transports.File)({ filename: 'somefile.log', level: 'error' })
     ]
   });
-  logger.debug("Will not be logged in either transport!");
+  logger.debug("Sẽ không được hiển thị logger trong cả hai hình thức !");
   logger.transports.console.level = 'debug';
   logger.transports.file.level = 'verbose';
   logger.verbose("Will be logged in both transports!");
 ```
+winston hỗ trợ mức đăng nhập tùy biến, mặc định để [NPM] [0] level để khai thác logger. Thay đổi level là dễ dàng:
 
-As of 0.2.0, winston supports customizable logging levels, defaulting to [npm][0] style logging levels. Changing logging levels is easy:
 
 ``` js
-  //
-  // Change levels on the default winston logger
+  // Thay đổi level về default winston logger
   //
   winston.setLevels(winston.config.syslog.levels);
 
+  // Thay đổi level của một thể hiện  của một thông báo
   //
-  // Change levels on an instance of a logger
-  //
+  
   logger.setLevels(winston.config.syslog.levels);
 ```
 
@@ -480,7 +495,9 @@ Calling `.setLevels` on a logger will remove all of the previous helper methods 
 ```
 
 ### Using Custom Logging Levels
-In addition to the predefined `npm` and `syslog` levels available in Winston, you can also choose to define your own:
+
+Bạn có thể định nghĩa Ngoài các npm` và 'mức được xác định trước' syslog` sẵn ở Winston, bạn cũng có thể chọn để định nghĩa của riêng bạn:
+
 
 ``` js
   var myCustomLevels = {
@@ -502,55 +519,56 @@ In addition to the predefined `npm` and `syslog` levels available in Winston, yo
   customLevelLogger.foobar('some foobar level-ed message');
 ```
 
-Although there is slight repetition in this data structure, it enables simple encapsulation if you do not want to have colors. If you do wish to have colors, in addition to passing the levels to the Logger itself, you must make winston aware of them:
+Mặc dù có sự lặp lại nhỏ trong cấu trúc dữ liệu này, nó cho phép đóng gói đơn giản nếu bạn không muốn có màu sắc. Nếu bạn muốn có màu sắc, ngoài đi qua các cấp độ để Logger chính nó, bạn phải làm cho winston nhận thức của họ:
+
 
 ``` js
   //
-  // Make winston aware of these colors
+  // Hãy winston nhận thức được những màu sắc
   //
   winston.addColors(myCustomLevels.colors);
 ```
-
-This enables transports with the 'colorize' option set to appropriately color the output of custom levels.
+Điều này cho phép transports với các tùy chọn 'colorize' thiết lập để phù hợp màu đầu ra của mức độ tùy chỉnh.
 
 ## Further Reading
 
 ### Events and Callbacks in Winston
-Each instance of winston.Logger is also an instance of an [EventEmitter][1]. A log event will be raised each time a transport successfully logs a message:
+
+Mỗi trường hợp của winston.Logger cũng là một thể hiện của một [EventEmitter] [1]. Một sự kiện đăng nhập sẽ được tăng lên mỗi lần vận chuyển đăng nhập thành công một tin nhắn:
 
 ``` js
   logger.on('logging', function (transport, level, msg, meta) {
-    // [msg] and [meta] have now been logged at [level] to [transport]
+   // [Msg] và [meta] hiện đã đăng tại [level] để [transport]
   });
 
   logger.info('CHILL WINSTON!', { seriously: true });
 ```
-
-It is also worth mentioning that the logger also emits an 'error' event which you should handle or suppress if you don't want unhandled exceptions:
+Nó cũng đáng nói đến là logger cũng phát ra một sự kiện 'error' mà bạn nên xử lý hoặc ngăn chặn nếu bạn không muốn trường hợp ngoại lệ unhandled:
 
 ``` js
   //
-  // Handle errors
+  // Handle lỗi
   //
-  logger.on('error', function (err) { /* Do Something */ });
+  logger.on('error', function (err) { /* Làm việc gì đó */ });
 
   //
-  // Or just suppress them.
+  // Hoặc chỉ cần ngăn chặn chúng.
   //
   logger.emitErrs = false;
 ```
 
-Every logging method described in the previous section also takes an optional callback which will be called only when all of the transports have logged the specified message.
+Một phương pháp gọi lại chỉ khi các logger được định nghĩa thành công.
 
 ``` js
   logger.info('CHILL WINSTON!', { seriously: true }, function (err, level, msg, meta) {
-    // [msg] and [meta] have now been logged at [level] to **every** transport.
+    // [msg] và [meta] hiện nay đã được ghi lại ở [level] đế **tất cả** transport.
   });
 ```
 
 ### Working with multiple Loggers in winston
 
-Often in larger, more complex, applications it is necessary to have multiple logger instances with different settings. Each logger is responsible for a different feature area (or category). This is exposed in `winston` in two ways: through `winston.loggers` and instances of `winston.Container`. In fact, `winston.loggers` is just a predefined instance of `winston.Container`:
+
+Thông thường trong lớn hơn, phức tạp hơn, các ứng dụng cần thiết phải có nhiều trường hợp logger với các thiết lập khác nhau.
 
 ``` js
   var winston = require('winston');
@@ -580,7 +598,8 @@ Often in larger, more complex, applications it is necessary to have multiple log
   });
 ```
 
-Now that your loggers are setup, you can require winston _in any file in your application_ and access these pre-configured loggers:
+
+Bây giờ logger của bạn được thiết lập, bạn có thể yêu cầu winston _Print bất kỳ tập tin trong application_ của bạn và truy cập các logger được cấu hình sẵn:
 
 ``` js
   var winston = require('winston');
@@ -593,7 +612,8 @@ Now that your loggers are setup, you can require winston _in any file in your ap
   category1.info('logging from your IoC container-based logger');
 ```
 
-If you prefer to manage the `Container` yourself, you can simply instantiate one:
+
+Nếu bạn muốn quản lý `Container` chính mình, bạn chỉ đơn giản là có thể nhanh chóng một:
 
 ``` js
   var winston = require('winston'),
@@ -611,6 +631,8 @@ If you prefer to manage the `Container` yourself, you can simply instantiate one
 ```
 
 ### Sharing transports between Loggers in winston
+
+Chia sẻ các hình thức giữa các logger trong winston
 
 ``` js
   var winston = require('winston');
