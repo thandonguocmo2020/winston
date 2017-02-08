@@ -6,54 +6,66 @@
 
 [![NPM](https://nodei.co/npm/winston.png?downloads=true&downloadRank=true)](https://nodei.co/npm/winston/)
 
-A multi-transport async logging library for node.js. <span style="font-size:28px; font-weight:bold;">&quot;CHILL WINSTON! ... I put it in the logs.&quot;</span>
+Chúng ta có thể đặt các thông báo lỗi vào một bản ghi . <span style="font-size:28px; font-weight:bold;">&quot;CHILL WINSTON! ... tôi muốn đặt nó trong các nơi log phù hợp.&quot;</span>
 
 ## Motivation
-Winston is designed to be a simple and universal logging library with support for multiple transports. A transport is essentially a storage device for your logs. Each instance of a winston logger can have multiple transports configured at different levels. For example, one may want error logs to be stored in a persistent remote location (like a database), but all logs output to the console or a local file.
 
-There also seemed to be a lot of logging libraries out there that coupled their implementation of logging (i.e. how the logs are stored / indexed) to the API that they exposed to the programmer. This library aims to decouple those parts of the process to make it more flexible and extensible.
+Winston được thiết kế để có được 1 đơn giản ghi thông báo logging thư viện hỗ trợ của của nhiều thông báo. 1 Thông báo là cơ bản của 1 
+không gian lưu trữ bản ghi log của bạn. Nó giống như một thể hiện của 1 thông báo logger có trong config được định nghĩa bởi level. 
+
+Của 1 ví dụ. 1 thông báo lỗi error logs để có  ta có thể muốn ghi lỗi được lưu trữ trong một vị trí như cơ sở dữ liệu . Bởi vì tất cả các log này có thể được lưu tại console hoặc 1 local file tập tin.
+
+
+Thư viện này nhằm mục đích để tách những phần của quá trình này để làm cho nó linh hoạt và mở rộng hơn. Làm thế nào để nó được lưu trữ.
+
 
 ## Installation
+
+Cài đặt :
 
 ```bashp
 npm install winston
 ```
 
 ## Usage
-There are two different ways to use winston: directly via the default logger, or by instantiating your own Logger. The former is merely intended to be a convenient shared logger to use throughout your application if you so choose.
+Có hai cách khác nhau để sử dụng winston: trực tiếp thông qua các logger default. hoặc sử dụng bằng cách cài đặt của riêng bạn.
+
+There are two different ways to use winston: directly via the default logger, or by instantiating your own Logger.  Vấn đề trước tiên chỉ đơn thuần được dự định là một logger chia sẻ thuận tiện để sử dụng trong suốt ứng dụng của bạn nếu bạn lựa chọn.
 
 * [Logging](#logging)
-  * [Using the Default Logger](#using-the-default-logger)
-  * [Instantiating your own Logger](#instantiating-your-own-logger)
-  * [Logging with Metadata](#logging-with-metadata)
-  * [String interpolation](#string-interpolation)
-* [Transports](https://github.com/winstonjs/winston/blob/master/docs/transports.md)
-  * [Multiple transports of the same type](#multiple-transports-of-the-same-type)
-* [Profiling](#profiling)
-* [Streaming Logs](#streaming-logs)
-* [Querying Logs](#querying-logs)
-* [Exceptions](#exceptions)
-  * [Handling Uncaught Exceptions with winston](#handling-uncaught-exceptions-with-winston)
-  * [To Exit or Not to Exit](#to-exit-or-not-to-exit)
-* [Logging Levels](#logging-levels)
-  * [Using Logging Levels](#using-logging-levels)
-  * [Using Custom Logging Levels](#using-custom-logging-levels)
-* [Further Reading](#further-reading)
-  * [Events and Callbacks in Winston](#events-and-callbacks-in-winston)
-  * [Working with multiple Loggers in winston](#working-with-multiple-loggers-in-winston)
-  * [Using winston in a CLI tool](#using-winston-in-a-cli-tool)
-  * [Filters and Rewriters](#filters-and-rewriters)
-  * [Adding Custom Transports](#adding-custom-transports)
-* [Installation](#installation)
-* [Run Tests](#run-tests)
+  * [Sử dụng một mặc định logger](#using-the-default-logger)
+  * [Sử dụng theo cách định nghĩa của riêng bạn](#instantiating-your-own-logger)
+  * [logger với các metadata thiết lập](#logging-with-metadata)
+  * [Tự động phân tích chuỗi logger](#string-interpolation)
+* [Các cơ chế truyền tải lỗi](https://github.com/winstonjs/winston/blob/master/docs/transports.md)
+  * [Các cơ chế truyền tải thông điệp cùng lúc](#multiple-transports-of-the-same-type)
+* [Cơ chế đơn giản làm việc với bất kỳ logging](#profiling)
+* [Log trực tiếp các bản ghi từ 1 nơi lựa chọn](#streaming-logs)
+* [log theo từng trường hợp](#querying-logs)
+* [Ngoại lệ](#exceptions)
+  * [Xử lý ngoại lệ với winston](#handling-uncaught-exceptions-with-winston)
+  * [Để Exit hoặc Not Exit](#to-exit-or-not-to-exit)
+* [Các loại thông báo lỗi](#logging-levels)
+  * [Sử dụng các loại logging levels](#using-logging-levels)
+  * [Tùy chỉnhLogging Levels](#using-custom-logging-levels)
+* [Đọc các tính năng](#further-reading)
+  * [Events và Callbacks trong Winston](#events-and-callbacks-in-winston)
+  * [Working với nhiều thông báo trong winston](#working-with-multiple-loggers-in-winston)
+  * [sử dụng winston trong một CLI tool](#using-winston-in-a-cli-tool)
+  * [Filters và  Rewriters](#filters-and-rewriters)
+  * [Adding thêm một hình thức  Transports](#adding-custom-transports)
+* [Cài đặt](#installation)
+* [Chạy thử Tests](#run-tests)
 
 
 ## Logging
 
-Logging levels in `winston` conform to the severity ordering specified by [RFC5424](https://tools.ietf.org/html/rfc5424): _severity of all levels is assumed to be numerically **ascending** from most important to least important._
+Thông báo level là một  `winston` phù hợp mức độ nghiêm trọng trong [RFC5424](https://tools.ietf.org/html/rfc5424): các mức độ quan trọng giả định được tăng dần từ mức nghiêm trọng đến ít quan trọng.
 
 ### Using the Default Logger
-The default logger is accessible through the winston module directly. Any method that you could call on an instance of a logger is available on the default logger:
+Các logger mặc định có thể truy cập thông qua các module winston trực tiếp. Bất kỳ phương pháp mà bạn có thể gọi về một thể hiện của một logger có sẵn trên logger default.
+
+Ví dụ : 
 
 ``` js
   var winston = require('winston');
@@ -65,14 +77,16 @@ The default logger is accessible through the winston module directly. Any method
   winston.log('debug', 'Now my debug messages are written to console!');
 ```
 
-By default, only the Console transport is set on the default logger. You can add or remove transports via the add() and remove() methods:
+Theo mặc định, chỉ có các Console hình thức là một thiết lập mặc định hiển thị thông báo logger.
+
+Bạn có thể add hoặc xóa bỏ một hình thức truyền tải "transports" bỏi các phương pháp add() và remove() :
 
 ``` js
   winston.add(winston.transports.File, { filename: 'somefile.log' });
   winston.remove(winston.transports.Console);
 ```
 
-Or do it with one call to configure():
+Hoặc làm điều đó với configure() phương pháp và định nghĩa transports hình thức logger của bạn :
 
 ``` js
   winston.configure({
@@ -82,11 +96,10 @@ Or do it with one call to configure():
   });
 ```
 
-For more documentation about working with each individual transport supported by Winston see the [Winston Transports](docs/transports.md) document.
+Đối với tài liệu hướng dẫn thêm về làm việc với từng config transport được hỗ trợ bởi Winston sẽ thấy trong [Winston Transports](docs/transports.md) tài liệu.
 
 ### Instantiating your own Logger
-If you would prefer to manage the object lifetime of loggers you are free to instantiate them yourself:
-
+Nếu bạn muốn quản lý các object lifetime thể hiện của object loggers. Bạn có thể làm nó nhanh chóng như sau :
 ``` js
   var logger = new (winston.Logger)({
     transports: [
@@ -96,7 +109,7 @@ If you would prefer to manage the object lifetime of loggers you are free to ins
   });
 ```
 
-You can work with this logger in the same way that you work with the default logger:
+Bạn có thể làm việc với logger này trong cùng một cách mà bạn làm việc với các logger mặc định:
 
 ``` js
   //
@@ -114,7 +127,7 @@ You can work with this logger in the same way that you work with the default log
     .remove(winston.transports.Console);
 ```
 
-You can also wholesale reconfigure a `winston.Logger` instance using the `configure` method:
+bạn cũng có thể cấu hình lại toàn bộ `winston.Logger` thí dụ sử dụng hàm `configure` method:
 
 ``` js
   var logger = new winston.Logger({
@@ -125,8 +138,7 @@ You can also wholesale reconfigure a `winston.Logger` instance using the `config
     ]
   });
 
-  //
-  // Replaces the previous transports with those in the
+  // thay thế các hình thức trước đó bằng  một cấu hình mới
   // new configuration wholesale.
   //
   logger.configure({
@@ -139,20 +151,25 @@ You can also wholesale reconfigure a `winston.Logger` instance using the `config
 
 
 ### Logging with Metadata
-In addition to logging string messages, winston will also optionally log additional JSON metadata objects. Adding metadata is simple:
+
+ngoài logger một chuỗi tin nhắn string messages, winston cũng hỗ trợ thiết lập  kèm theo JSON metadata object và một metadata đơn giản í dụ như:
 
 ``` js
   winston.log('info', 'Test Log Message', { anything: 'This is metadata' });
 ```
 
-The way these objects are stored varies from transport to transport (to best support the storage mechanisms offered). Here's a quick summary of how each transports handles metadata:
 
-1. __Console:__ Logged via util.inspect(meta)
-2. __File:__ Logged via util.inspect(meta)
+Cách các đối tượng được lưu trữ khác nhau từ hình thức transports. để hỗ trợ tốt nhất các cơ chế lưu trữ được cung cấp 
+
+ưới đây là một bản tóm tắt nhanh chóng như thế nào mỗi vận chuyển xử lý siêu dữ liệu metadata:
+
+1. __Console:__ thông báo với  util.inspect(meta)
+2. __File:__ thông báo với  util.inspect(meta)
 
 ## Multiple transports of the same type
 
-It is possible to use multiple transports of the same type e.g. `winston.transports.File` by passing in a custom `name` when you construct the transport.
+Có thể sử dụng nhiều "multiple transports" giống như các loại level e.g. `winston.transports.File` 
+bằng cách đi qua trong một tùy chỉnh `name` khi bạn xây dựng các hình thức transports.
 
 ``` js
 var logger = new (winston.Logger)({
@@ -171,13 +188,13 @@ var logger = new (winston.Logger)({
 });
 ```
 
-If you later want to remove one of these transports you can do so by using the string name. e.g.:
+Nếu sau này bạn muốn loại bỏ một trong cá hình thức truyền tải thông điệp, bạn có thể làm như vậy bằng cách sử dụng tên chuỗi name. e.g.:
 
 ``` js
 logger.remove('info-file');
 ```
 
-In this example, one could also remove by passing in the instance of the Transport itself. e.g. this is equivalent to the string example above:
+Bạn cũng có thể sử dụng bằng cách loại bỏ chính nó trong ví dụ này tương tự chuỗi trên 
 
 ``` js
 // Notice it was first in the Array above
